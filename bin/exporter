@@ -109,14 +109,14 @@ def committer [--push: bool = true] {
   echo ":: Committing changes in destination"
 
   cd $app_config.paths.destination
-  if not (".git" | path exists) { git init }
-  git add *
-  git commit -m 'exporter'
-  cd -
+    if not (".git" | path exists) { git init }
+    git add *
+    git commit -m 'exporter'
 
-  if $push and (do { git remote show origin } | complete).exit_code == 0 {
-    git push origin main
-  }
+    if $push and (do { git remote show origin } | complete).exit_code == 0 {
+      git push --set-upstream origin main
+    }
+  cd -
 
   $app_config
 }
