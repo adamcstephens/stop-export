@@ -1,0 +1,117 @@
+#!/usr/bin/env nu
+
+export def load-configs [] {
+  $in | reduce --fold ({} | into record) { |conf, acc|
+    let data = open ($conf | path expand)
+
+    $acc | if $data != null { merge $data }
+  }
+}
+
+export def init-paths [] {
+  let app_config = $in
+
+  let source = $app_config.paths.source | path expand
+  if not ($source | path exists) {
+    print $"!! Source directory does not exist, ($source)"
+    exit 1
+  }
+
+  let destination = $app_config.paths.destination | path expand
+  if not ($destination | path exists) {
+    print $":: Setting up new destination directory, ($destination)"
+    mkdir -v $destination
+    cd $destination
+      git init .
+    cd -
+  }
+
+  $app_config | update paths.source $source | update paths.destination $destination
+}
+
+export def audit-includes [] {
+  let app_config = $in
+ 
+  $app_config | update paths.includes ($app_config.paths.includes | each { |inc|
+    let inc_full = $app_config.paths.source | path join $inc
+
+    if not ($inc_full | path exists) {
+      print $"!! Include '($inc_full)' does not exist"
+      exit 1
+    }
+
+    if ($inc_full | path type) != "file" {
+      print $"!! Include '($inc_full)' is not a file, only files are supported"
+      exit 1
+    }
+
+    $app_config.watches.content-regex | each { |c| audit-content $inc_full $c }
+    $app_config.watches.filename-regex | each { |f| audit-filename $inc_full $f }
+
+    $inc_full
+  })
+}
+
+def audit-content [include: string, regex: string] {
+   let check = rg -He $regex $include | complete
+
+   if ($check.exit_code == 0) {
+      print $"!! Failed content audit '($regex)' for include '($include)'"
+      print $check.stdout
+      exit 1
+   }
+}
+
+def audit-filename [include: string, regex: string] {
+   let check = $include | find --regex $regex
+
+   if ($check | length) != 0 {
+      print $"!! Failed filename audit '($regex)' for include '($include)'"
+      exit 1
+   }
+}
+
+def exporter [] {
+  let app_config = $in
+
+  echo ":: Exporting includes to destination"
+
+  $app_config.paths.includes | each { |inc|
+    let inc_dest = $inc | str replace $app_config.paths.source $app_config.paths.destination
+    let inc_dest_parent = $inc_dest | path dirname
+
+    if not ($inc_dest_parent | path exists) { mkdir -v $inc_dest_parent }
+
+    cp -v $inc $inc_dest
+  }
+
+  $app_config
+}
+
+def committer [] {
+  let app_config = $in
+
+  echo ":: Committing changes in destination"
+
+  cd $app_config.paths.destination
+  if not (".git" | path exists) { git init }
+  git add *
+  git commit -m 'exporter'
+  cd -
+
+  $app_config
+}
+
+def main [ ...configs: string ] {
+  if ($configs | length) == 0 { 
+    echo "!! Must provide at least one configuration file"
+    exit 1 
+  }
+
+  let app_config = $configs | load-configs | init-paths | audit-includes
+  # print $app_config.paths.includes
+
+  $app_config | exporter | committer
+
+  exit 0
+}
