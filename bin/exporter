@@ -115,6 +115,7 @@ def committer [--push: bool = true] {
 
     if $push and (do { git remote show origin } | complete).exit_code == 0 {
       git push --set-upstream origin main
+      git push github main
     }
   cd -
 
