@@ -1,4 +1,19 @@
 #!/usr/bin/env nu
+#
+# config file data structure
+#
+# {
+#   "paths": {
+#     "source": ".",
+#     "destination": "../export",
+#     "includes": [ "string" ]
+#   },
+#   "watches": {
+#     "content-regex": [ "string" ],
+#     "filename-regex": [ "string", ]
+#   }
+# }
+
 
 export def load-configs [] {
   $in | reduce --fold ({} | into record) { |conf, acc|
@@ -88,7 +103,7 @@ def exporter [] {
   $app_config
 }
 
-def committer [] {
+def committer [--push: bool = true] {
   let app_config = $in
 
   echo ":: Committing changes in destination"
@@ -98,6 +113,10 @@ def committer [] {
   git add *
   git commit -m 'exporter'
   cd -
+
+  if $push and (do { git remote show origin } | complete).exit_code == 0 {
+    git push
+  }
 
   $app_config
 }
