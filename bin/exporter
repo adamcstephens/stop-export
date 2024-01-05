@@ -115,8 +115,7 @@ def committer [--push: bool = true] {
   cd -
 
   if $push and (do { git remote show origin } | complete).exit_code == 0 {
-    echo "hi"
-    git push
+    git push origin main
   }
 
   $app_config
