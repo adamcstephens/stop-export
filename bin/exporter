@@ -103,7 +103,9 @@ def exporter [] {
   $app_config
 }
 
-def committer [--push: bool = true] {
+def committer [
+  --push: bool = true  # enable pushing of changes to origin
+] {
   let app_config = $in
 
   echo ":: Committing changes in destination"
@@ -122,7 +124,10 @@ def committer [--push: bool = true] {
   $app_config
 }
 
-def main [ ...configs: string ] {
+def main [ 
+  --push: bool = true  # enable pushing of changes to origin
+  ...configs: string
+] {
   if ($configs | length) == 0 { 
     echo "!! Must provide at least one configuration file"
     exit 1 
@@ -131,7 +136,7 @@ def main [ ...configs: string ] {
   let app_config = $configs | load-configs | init-paths | audit-includes
   # print $app_config.paths.includes
 
-  $app_config | exporter | committer
+  $app_config | exporter | committer --push $push
 
   exit 0
 }
