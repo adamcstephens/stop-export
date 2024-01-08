@@ -1,0 +1,62 @@
+{
+    "lms": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "lms",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "arch": null,
+            "finalImageName": null,
+            "finalImageTag": null,
+            "imageDigest": "sha256:cfc80537aea7b413508fb858713bbd4adb38664885543a907acd2ba42afa9ee4",
+            "imageName": "docker.io/lmscommunity/logitechmediaserver",
+            "imageTag": "8.3.1",
+            "os": null,
+            "sha256": "sha256-weCf2yvGSQaWcIJGtmT7e1MLnesIXBqvLGP4jruO7wU=",
+            "tlsVerify": null
+        },
+        "version": "8.3.1"
+    },
+    "nix-aarch64-linux": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "nix-aarch64-linux",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "arch": "arm64",
+            "finalImageName": null,
+            "finalImageTag": null,
+            "imageDigest": "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e",
+            "imageName": "docker.io/nixos/nix",
+            "imageTag": "2.19.2",
+            "os": null,
+            "sha256": "sha256-o+JhCIfBw2C5ThDDSlZMtAUsG57QYiLIXsx9Qn5oClU=",
+            "tlsVerify": null
+        },
+        "version": "2.19.2"
+    },
+    "nix-x86_64-linux": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "nix-x86_64-linux",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "arch": "amd64",
+            "finalImageName": null,
+            "finalImageTag": null,
+            "imageDigest": "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e",
+            "imageName": "docker.io/nixos/nix",
+            "imageTag": "2.19.2",
+            "os": null,
+            "sha256": "sha256-6Bgwlsis6M7apkGj0HGAd12tPrRwEjSn9jdoiWsiUDM=",
+            "tlsVerify": null
+        },
+        "version": "2.19.2"
+    }
+}
