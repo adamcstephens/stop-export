@@ -23,6 +23,33 @@ in
       owner = "matrix-sliding-sync";
     };
 
+    security.acme = {
+      acceptTerms = true;
+
+      defaults.email = config.stop.acme.email;
+
+      certs.synapse = {
+        domain = config.robins.zone;
+        extraDomainNames = [
+          config.robins.hostnames.chat
+          config.robins.hostnames.matrix
+          config.robins.hostnames.matrix-sliding-sync
+        ];
+
+        listenHTTP = ":80";
+
+        group = "pomerium";
+
+        reloadServices = [ "pomerium.service" ];
+      };
+    };
+    services.pomerium.settings.certificates = [
+      {
+        cert = "/var/lib/acme/synapse/fullchain.pem";
+        key = "/var/lib/acme/synapse/key.pem";
+      }
+    ];
+
     services.postgresql = {
       enable = true;
       package = pkgs.postgresql_14; # 15 requires some public schema access not supported by module (ownership works...)
@@ -176,7 +203,8 @@ in
           {
             from = "https://${config.robins.hostnames.chat}";
             to = "http://127.0.0.1:8080";
-            policy.allow.and = [ { domain.is = config.robins.zone; } ];
+            # policy.allow.and = [ { domain.is = config.robins.zone; } ];
+            allow_public_unauthenticated_access = true;
           }
           {
             from = "https://${config.robins.zone}";

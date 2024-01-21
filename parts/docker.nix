@@ -25,7 +25,16 @@
 
             wrapProgram $out/bin/flake-build --prefix PATH : ${
               lib.makeBinPath [
-                inputs'.attic.packages.attic
+                (inputs'.attic.packages.attic.overrideAttrs (
+                  prev: {
+                    patches = (prev.patches or [ ]) ++ [
+                      (pkgs.fetchpatch {
+                        url = "https://github.com/zhaofengli/attic/pull/105.patch";
+                        hash = "sha256-YxNAmk4CJ22KNwJi4YFW1FljbChWEYlyfLbia7YyToE=";
+                      })
+                    ];
+                  }
+                ))
                 pkgs.coreutils
                 pkgs.nix
                 pkgs.nix-eval-jobs
@@ -80,6 +89,7 @@
           # replace the entire path so we can prepend /bin
           config.Env = [
             "PATH=/bin:/root/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin"
+            "NIX_EVAL_ARGS=--eval-store unix:///host/nix/var/nix/daemon-socket/socket?root=/host"
           ];
         };
     };

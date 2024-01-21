@@ -1,4 +1,7 @@
 { lib, withSystem, ... }:
+let
+  sources = import ./npins;
+in
 {
   flake.packages.aarch64-linux = withSystem "aarch64-linux" (
     { pkgs, self', ... }:
@@ -26,7 +29,7 @@
             NVMEM_QCOM_QFPROM = lib.mkForce yes;
             ARM_QCOM_CPUFREQ_NVMEM = lib.mkForce yes;
             VIRTIO_PCI = lib.mkForce module;
-            # QCOM_PD_MAPPER = lib.mkForce module;
+            # forthcoming kernel work: QCOM_PD_MAPPER = lib.mkForce module;
           };
         }
       ];
@@ -37,24 +40,14 @@
           version = "6.7.0";
           modDirVersion = "${version}";
         in
-        # rev = "b8cd563c115473e27fa4778c1eca7b25f6f9a7ee";
         buildLinux (
           args
           // {
             inherit version modDirVersion;
 
-            src = pkgs.fetchFromGitHub {
-              repo = "linux";
-              name = "x13s-linux-${modDirVersion}";
-              owner = "jhovold";
-              hash = "sha256-7LSxxXtTitbBKFlFJtlfhBgY6Ld0/1cbP3SBAk15ZRc="; # https://github.com/jhovold/linux
-              rev = "wip/sc8280xp-v6.7";
-              # owner = "steev";
-              # hash = "sha256-lg52pgvL3Js69DganSnSu+cQoyECj1OTgs49a7OWqg0=";
-              # rev = "lenovo-x13s-v${version}"; # https://github.com/steev/linux/
-            };
-            kernelPatches = (args.kernelPatches or [ ]) ++ kp;
+            src = sources.jhovold-linux;
 
+            kernelPatches = (args.kernelPatches or [ ]) ++ kp;
             extraMeta.branch = lib.versions.majorMinor version;
           }
           // (args.argsOverride or { })
@@ -62,6 +55,17 @@
     in
     {
       "x13s/linux" = pkgs.callPackage linux_x13s_pkg { defconfig = "johan_defconfig"; };
+      "x13s/alsa-ucm-conf" = pkgs.alsa-ucm-conf.overrideAttrs (
+        prev: rec {
+          version = "1.2.11-unstable-${builtins.substring 0 7 src.rev}";
+          src = pkgs.fetchFromGitHub {
+            owner = "alsa-project";
+            repo = "alsa-ucm-conf";
+            rev = "e87dde51d68950537f92af955ad0633437cc419a";
+            hash = "sha256-Nyr7tjH5VBjocvaKaHCiK+zsjThYBtcr936aRWCBBpM=";
+          };
+        }
+      );
 
       pd-mapper = pkgs.callPackage ./qrtr/pd-mapper.nix { inherit (self'.packages) qrtr; };
       qrtr = pkgs.callPackage qrtr/qrtr.nix { };

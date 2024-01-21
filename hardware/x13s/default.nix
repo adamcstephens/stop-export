@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   self,
@@ -41,41 +40,21 @@ in
       };
     };
 
-    # can't rebuild python3-afdko
-    # nixpkgs = {
-    #   overlays = [
-    #     (_: prev: {
-    #       alsa-ucm-conf = prev.alsa-ucm-conf.overrideAttrs (
-    #         old: {
-    #           src = pkgs.fetchFromGitHub {
-    #             owner = "Srinivas-Kandagatla";
-    #             repo = "alsa-ucm-conf";
-    #             rev = "e8c3e7792336e9f68aa560db8ad19ba06ba786bb";
-    #             hash = "sha256-4fIvgHIkTyGApM3uvucFPSYMMGYR5vjHOz6KQ26Kg7A=";
-    #           };
-    #           patches = [ ./unfix-device-numbers.patch ];
-    #         }
-    #       );
-    #     })
-    #   ];
-    # };
+    # bind mount over existing alsa-ucm-conf
+    # this is just config, but is in the critical path for lots of packages
+    systemd.services.x13s-alsa-conf = {
+      wantedBy = [ "multi-user.target" ];
 
-    # requires impure
-    # system.replaceRuntimeDependencies = [
-    #   ({
-    #     original = pkgs.alsa-ucm-conf;
-    #     replacement =
-    #       (pkgs.callPackage "${inputs.nixpkgs}/pkgs/by-name/al/alsa-ucm-conf/package.nix" { }).overrideAttrs
-    #         ({
-    #           src = pkgs.fetchFromGitHub {
-    #             owner = "alsa-project";
-    #             repo = "alsa-ucm-conf";
-    #             rev = "23adf5a368abe9009f44547b91d60a244f735d81";
-    #             hash = "sha256-ZUosr12CszON9QygITQjtgPpr+HPQze4rq+o5/JKT34=";
-    #           };
-    #         });
-    #   })
-    # ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+
+        ExecStart = "${pkgs.util-linux.mount}/bin/mount -o bind ${pkgs.alsa-ucm-conf}/share/alsa ${
+          self.packages.aarch64-linux."x13s/alsa-ucm-conf"
+        }/share/alsa";
+        ExecStop = "${pkgs.util-linux.mount}/bin/umount ${pkgs.alsa-ucm-conf}/share/alsa";
+      };
+    };
 
     boot = {
       loader.efi.canTouchEfiVariables = true;
@@ -94,7 +73,6 @@ in
       supportedFilesystems = lib.mkForce [
         "ext4"
         "btrfs"
-        "ntfs"
         "vfat"
       ];
 
@@ -144,6 +122,9 @@ in
       };
     };
 
+    # default is performance
+    powerManagement.cpuFreqGovernor = "ondemand";
+
     services.kanata = {
       enable = true;
       keyboards.thinkpad = {
@@ -155,12 +136,13 @@ in
 
     systemd.services.bluetooth = {
       serviceConfig = {
-        ExecStartPre = [
-          ""
-          "${pkgs.util-linux}/bin/rfkill block bluetooth"
-          "${pkgs.bluez5-experimental}/bin/btmgmt public-addr ${cfg.bluetoothMac}"
-          "${pkgs.util-linux}/bin/rfkill unblock bluetooth"
-        ];
+        # disabled because btmgmt call hangs
+        # ExecStartPre = [
+        #   ""
+        #   "${pkgs.util-linux}/bin/rfkill block bluetooth"
+        #   "${pkgs.bluez5-experimental}/bin/btmgmt public-addr ${cfg.bluetoothMac}"
+        #   "${pkgs.util-linux}/bin/rfkill unblock bluetooth"
+        # ];
         RestartSec = 5;
         Restart = "on-failure";
       };
