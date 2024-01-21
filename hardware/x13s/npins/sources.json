@@ -1,5 +1,17 @@
 {
   "pins": {
+    "alsa-ucm-conf": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "alsa-project",
+        "repo": "alsa-ucm-conf"
+      },
+      "branch": "master",
+      "revision": "e87dde51d68950537f92af955ad0633437cc419a",
+      "url": "https://github.com/alsa-project/alsa-ucm-conf/archive/e87dde51d68950537f92af955ad0633437cc419a.tar.gz",
+      "hash": "14q6h5h4b6kyywmxf1jq726yrv1bl9q6i2pnfbl1hm7r66vgnaip"
+    },
     "jhovold-linux": {
       "type": "Git",
       "repository": {

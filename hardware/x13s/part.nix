@@ -57,13 +57,8 @@ in
       "x13s/linux" = pkgs.callPackage linux_x13s_pkg { defconfig = "johan_defconfig"; };
       "x13s/alsa-ucm-conf" = pkgs.alsa-ucm-conf.overrideAttrs (
         prev: rec {
-          version = "1.2.11-unstable-${builtins.substring 0 7 src.rev}";
-          src = pkgs.fetchFromGitHub {
-            owner = "alsa-project";
-            repo = "alsa-ucm-conf";
-            rev = "e87dde51d68950537f92af955ad0633437cc419a";
-            hash = "sha256-Nyr7tjH5VBjocvaKaHCiK+zsjThYBtcr936aRWCBBpM=";
-          };
+          version = "1.2.11-unstable-${builtins.substring 0 7 src.revision}";
+          src = sources.alsa-ucm-conf;
         }
       );
 

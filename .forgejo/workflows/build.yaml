@@ -18,4 +18,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: flake-build --attic-use=true --nom=false --system ${{ matrix.system }}
+      - run: seed-ci --attic-use=true --nom=false --system ${{ matrix.system }}

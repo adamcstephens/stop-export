@@ -11,6 +11,10 @@ let
   dtbName = "sc8280xp-lenovo-thinkpad-x13s.dtb";
   linuxPackages_x13s = pkgs.linuxPackagesFor self.packages.aarch64-linux."x13s/linux";
   dtb = "${linuxPackages_x13s.kernel}/dtbs/qcom/${dtbName}";
+
+  alsa-ucm-conf-env.ALSA_CONFIG_UCM2 = "${
+    self.packages.aarch64-linux."x13s/alsa-ucm-conf"
+  }/share/alsa/ucm2";
 in
 {
   options.stop.hardware.x13s = {
@@ -40,21 +44,9 @@ in
       };
     };
 
-    # bind mount over existing alsa-ucm-conf
-    # this is just config, but is in the critical path for lots of packages
-    systemd.services.x13s-alsa-conf = {
-      wantedBy = [ "multi-user.target" ];
-
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-
-        ExecStart = "${pkgs.util-linux.mount}/bin/mount -o bind ${pkgs.alsa-ucm-conf}/share/alsa ${
-          self.packages.aarch64-linux."x13s/alsa-ucm-conf"
-        }/share/alsa";
-        ExecStop = "${pkgs.util-linux.mount}/bin/umount ${pkgs.alsa-ucm-conf}/share/alsa";
-      };
-    };
+    environment.sessionVariables = alsa-ucm-conf-env;
+    systemd.user.services.pipewire.environment = alsa-ucm-conf-env;
+    systemd.user.services.wireplumber.environment = alsa-ucm-conf-env;
 
     boot = {
       loader.efi.canTouchEfiVariables = true;

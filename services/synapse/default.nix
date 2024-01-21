@@ -199,12 +199,13 @@ in
             to = "http://127.0.0.1:8008";
             # policy.allow.and = [{accept = true;}];
             allow_public_unauthenticated_access = true;
+            timeout = "300s";
           }
           {
             from = "https://${config.robins.hostnames.chat}";
             to = "http://127.0.0.1:8080";
-            # policy.allow.and = [ { domain.is = config.robins.zone; } ];
-            allow_public_unauthenticated_access = true;
+            policy.allow.and = [ { domain.is = config.robins.zone; } ];
+            # allow_public_unauthenticated_access = true;
           }
           {
             from = "https://${config.robins.zone}";

@@ -25,16 +25,7 @@
 
             wrapProgram $out/bin/flake-build --prefix PATH : ${
               lib.makeBinPath [
-                (inputs'.attic.packages.attic.overrideAttrs (
-                  prev: {
-                    patches = (prev.patches or [ ]) ++ [
-                      (pkgs.fetchpatch {
-                        url = "https://github.com/zhaofengli/attic/pull/105.patch";
-                        hash = "sha256-YxNAmk4CJ22KNwJi4YFW1FljbChWEYlyfLbia7YyToE=";
-                      })
-                    ];
-                  }
-                ))
+                inputs'.attic.packages.attic
                 pkgs.coreutils
                 pkgs.nix
                 pkgs.nix-eval-jobs
@@ -63,7 +54,7 @@
           maxLayers = 115;
 
           contents = [
-            self'.packages.flake-tools
+            inputs'.dotfiles.packages.seed-ci
             # act expects nodejs
             pkgs.nodejs
 
