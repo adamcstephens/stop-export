@@ -1,0 +1,17 @@
+{
+  "pins": {
+    "jhovold-linux": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "jhovold",
+        "repo": "linux"
+      },
+      "branch": "wip/sc8280xp-v6.7",
+      "revision": "bac95eabe6577faa2773cbe7e91c34fd17ab79a0",
+      "url": "https://github.com/jhovold/linux/archive/bac95eabe6577faa2773cbe7e91c34fd17ab79a0.tar.gz",
+      "hash": "1y8abwa506q9dchqvnaqbb8n3i7nj2jnaxcll1f1476qi0yswc1n"
+    }
+  },
+  "version": 3
+}
