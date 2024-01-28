@@ -13,24 +13,37 @@
   };
   nix-aarch64-linux = {
     pname = "nix-aarch64-linux";
-    version = "2.19.2";
+    version = "2.19.3";
     src = dockerTools.pullImage {
       imageName = "docker.io/nixos/nix";
-      imageDigest = "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e";
-      sha256 = "sha256-o+JhCIfBw2C5ThDDSlZMtAUsG57QYiLIXsx9Qn5oClU=";
-      finalImageTag = "2.19.2";
+      imageDigest = "sha256:498fa2d7f2b5cb3891a4edf20f3a8f8496e70865099ba72540494cd3e2942634";
+      sha256 = "sha256-3JIykeNjgHmcsk5h6/b7/SXtvsRBzhHjFKoKvDnYRqk=";
+      finalImageTag = "2.19.3";
       arch = "arm64";
     };
   };
   nix-x86_64-linux = {
     pname = "nix-x86_64-linux";
-    version = "2.19.2";
+    version = "2.19.3";
     src = dockerTools.pullImage {
       imageName = "docker.io/nixos/nix";
-      imageDigest = "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e";
-      sha256 = "sha256-6Bgwlsis6M7apkGj0HGAd12tPrRwEjSn9jdoiWsiUDM=";
-      finalImageTag = "2.19.2";
+      imageDigest = "sha256:498fa2d7f2b5cb3891a4edf20f3a8f8496e70865099ba72540494cd3e2942634";
+      sha256 = "sha256-Dn/ZNHTFN9S80FlhCjFfx/N05QQR2yRLRU+T+fKeHRg=";
+      finalImageTag = "2.19.3";
       arch = "amd64";
     };
+  };
+  river = {
+    pname = "river";
+    version = "69a51cadb41443103370247ac515f1067da4b932";
+    src = fetchgit {
+      url = "https://codeberg.org/river/river.git";
+      rev = "69a51cadb41443103370247ac515f1067da4b932";
+      fetchSubmodules = true;
+      deepClone = false;
+      leaveDotGit = false;
+      sha256 = "sha256-5ZhAkP+O/+xm40mUWtY/WLbiSlxbmCTzIzDNPn5NxXg=";
+    };
+    date = "2024-01-13";
   };
 }

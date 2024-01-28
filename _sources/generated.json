@@ -30,14 +30,14 @@
             "arch": "arm64",
             "finalImageName": null,
             "finalImageTag": null,
-            "imageDigest": "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e",
+            "imageDigest": "sha256:498fa2d7f2b5cb3891a4edf20f3a8f8496e70865099ba72540494cd3e2942634",
             "imageName": "docker.io/nixos/nix",
-            "imageTag": "2.19.2",
+            "imageTag": "2.19.3",
             "os": null,
-            "sha256": "sha256-o+JhCIfBw2C5ThDDSlZMtAUsG57QYiLIXsx9Qn5oClU=",
+            "sha256": "sha256-3JIykeNjgHmcsk5h6/b7/SXtvsRBzhHjFKoKvDnYRqk=",
             "tlsVerify": null
         },
-        "version": "2.19.2"
+        "version": "2.19.3"
     },
     "nix-x86_64-linux": {
         "cargoLocks": null,
@@ -50,13 +50,32 @@
             "arch": "amd64",
             "finalImageName": null,
             "finalImageTag": null,
-            "imageDigest": "sha256:935cdafedba76f86c45d01f30f243474c958e1099029b292e5f2fbeac5f8805e",
+            "imageDigest": "sha256:498fa2d7f2b5cb3891a4edf20f3a8f8496e70865099ba72540494cd3e2942634",
             "imageName": "docker.io/nixos/nix",
-            "imageTag": "2.19.2",
+            "imageTag": "2.19.3",
             "os": null,
-            "sha256": "sha256-6Bgwlsis6M7apkGj0HGAd12tPrRwEjSn9jdoiWsiUDM=",
+            "sha256": "sha256-Dn/ZNHTFN9S80FlhCjFfx/N05QQR2yRLRU+T+fKeHRg=",
             "tlsVerify": null
         },
-        "version": "2.19.2"
+        "version": "2.19.3"
+    },
+    "river": {
+        "cargoLocks": null,
+        "date": "2024-01-13",
+        "extract": null,
+        "name": "river",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": true,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "69a51cadb41443103370247ac515f1067da4b932",
+            "sha256": "sha256-5ZhAkP+O/+xm40mUWtY/WLbiSlxbmCTzIzDNPn5NxXg=",
+            "type": "git",
+            "url": "https://codeberg.org/river/river.git"
+        },
+        "version": "69a51cadb41443103370247ac515f1067da4b932"
     }
 }

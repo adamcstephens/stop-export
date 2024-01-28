@@ -21,11 +21,11 @@ in
     environment.systemPackages = [ pkgs.sbctl ];
 
     boot = {
-      loader.systemd-boot.enable = false;
       lanzaboote = {
         enable = true;
         pkiBundle = "/etc/secureboot";
       };
+      loader.systemd-boot.enable = !config.boot.lanzaboote.enable;
     };
     hardware.uinput.enable = true;
 

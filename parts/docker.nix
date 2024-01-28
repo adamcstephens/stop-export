@@ -12,27 +12,6 @@
       site = stop.sites.${stop.site.content};
     in
     {
-      packages.flake-tools =
-        pkgs.runCommandNoCC "flake-tools"
-          {
-            nativeBuildInputs = [ pkgs.makeWrapper ];
-            buildInputs = [ pkgs.nushell ];
-          }
-          ''
-            mkdir -p $out/bin
-            cp ${../bin/flake-build} $out/bin/flake-build
-            patchShebangs $out/bin
-
-            wrapProgram $out/bin/flake-build --prefix PATH : ${
-              lib.makeBinPath [
-                inputs'.attic.packages.attic
-                pkgs.coreutils
-                pkgs.nix
-                pkgs.nix-eval-jobs
-              ]
-            }
-          '';
-
       packages.docker-image =
         let
           nvfetcher = import ../_sources/generated.nix {

@@ -29,6 +29,7 @@
             self
             ;
         };
+        litefs = import ./litefs.nix { inherit lib pkgs self; };
         router = import ./router.nix { inherit lib pkgs routerCommon; };
       };
     };

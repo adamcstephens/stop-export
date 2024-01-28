@@ -44,8 +44,8 @@ in
 
     systemd.services.exabgp = {
       wantedBy = [ "multi-user.target" ];
-      after = [ "network-online.target" ];
       requires = [ "network-online.target" ];
+      after = [ "network-online.target" ];
 
       serviceConfig = {
         DynamicUser = true;

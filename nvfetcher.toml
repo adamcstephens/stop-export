@@ -14,3 +14,9 @@ docker.arch = "amd64"
 src.github_tag = "nixos/nix"
 fetch.docker = "docker.io/nixos/nix"
 docker.arch = "arm64"
+
+[river]
+src.git = "https://codeberg.org/river/river.git"
+src.branch = "master"
+git.fetchSubmodules = true
+fetch.git = "https://codeberg.org/river/river.git"
