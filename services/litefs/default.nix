@@ -2,55 +2,44 @@
   config,
   lib,
   pkgs,
-  utils,
   ...
 }:
 let
-  inherit (utils.systemdUtils.lib) mkPathSafeName;
-
   cfg = config.services.litefs;
 
   yamlType = pkgs.formats.yaml { };
-
   mkConfig = name: settings: yamlType.generate "litefs.yml" settings;
 
-  services =
-    lib.mapAttrs'
-      (
-        name: v:
-        lib.nameValuePair "litefs-${name}" {
-          wantedBy = [ "multi-user.target" ];
-          requires = [ "network-online.target" ];
-          after = [ "network-online.target" ];
+  services = lib.mapAttrs' (
+    name: v:
+    lib.nameValuePair "litefs-${name}" {
+      wantedBy = [ "multi-user.target" ];
+      requires = [ "network-online.target" ];
+      after = [ "network-online.target" ];
 
-          path = [ "/run/wrappers" ];
+      # need wrapped fusermount3
+      path = [ "/run/wrappers" ];
 
-          serviceConfig = {
-            # StateDirectory = v.settings.data.dir;
-            User = v.user;
-            Group = "users";
-            ExecStart = "${lib.getExe pkgs.litefs} mount -config ${mkConfig name v.settings}";
-          };
-        }
-      )
-      cfg.mounts;
+      serviceConfig = {
+        User = v.user;
+        ExecStart = "${lib.getExe pkgs.litefs} mount -config ${mkConfig name v.settings}";
+      };
+    }
+  ) cfg.mounts;
 
-  tmpfiles =
-    lib.mapAttrs'
-      (
-        name: v:
-        lib.nameValuePair "10-litefs-${name}" {
-          "${v.settings.data.dir}".d = {
-            user = v.user;
-            mode = "0700";
-          };
-          "${v.settings.fuse.dir}".d = {
-            user = v.user;
-            mode = "0700";
-          };
-        }
-      )
-      cfg.mounts;
+  tmpfiles = lib.mapAttrs' (
+    name: v:
+    lib.nameValuePair "10-litefs-${name}" {
+      "${v.settings.data.dir}".d = {
+        user = v.user;
+        mode = "0700";
+      };
+      "${v.settings.fuse.dir}".d = {
+        user = v.user;
+        mode = "0700";
+      };
+    }
+  ) cfg.mounts;
 in
 {
   options.services.litefs = {

@@ -22,7 +22,7 @@ in
 
     boot = {
       lanzaboote = {
-        enable = true;
+        enable = false;
         pkiBundle = "/etc/secureboot";
       };
       loader.systemd-boot.enable = !config.boot.lanzaboote.enable;
@@ -38,5 +38,12 @@ in
         devices = [ "/dev/input/by-path/platform-894000.i2c-event-kbd" ];
       };
     };
+
+    specialisation = {
+      mainline.configuration.nixos-x13s.kernel = "mainline";
+      steev.configuration.nixos-x13s.kernel = "steev";
+    };
+
+    stop.hardware.laptop.enable = lib.mkDefault true;
   };
 }

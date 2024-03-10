@@ -46,7 +46,7 @@ export def init-paths [] {
 
 export def audit-includes [] {
   let app_config = $in
- 
+
   $app_config | update paths.includes ($app_config.paths.includes | each { |inc|
     let inc_full = $app_config.paths.source | path join $inc
 
@@ -104,7 +104,7 @@ def exporter [] {
 }
 
 def committer [
-  --push: bool = true  # enable pushing of changes to origin
+  --push = true  # enable pushing of changes to origin
 ] {
   let app_config = $in
 
@@ -124,13 +124,13 @@ def committer [
   $app_config
 }
 
-def main [ 
-  --push: bool = true  # enable pushing of changes to origin
+def main [
+  --push = true  # enable pushing of changes to origin
   ...configs: string
 ] {
-  if ($configs | length) == 0 { 
+  if ($configs | length) == 0 {
     echo "!! Must provide at least one configuration file"
-    exit 1 
+    exit 1
   }
 
   let app_config = $configs | load-configs | init-paths | audit-includes

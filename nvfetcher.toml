@@ -1,19 +1,7 @@
-[lms]
-src.github_tag = "Logitech/slimserver"
-src.include_regex = "8.*"
-# src.container = "lmscommunity/logitechmediaserver"
-# src.include_regex = "8\\.3.*"
-fetch.docker = "docker.io/lmscommunity/logitechmediaserver"
-
-[nix-x86_64-linux]
-src.github_tag = "nixos/nix"
-fetch.docker = "docker.io/nixos/nix"
-docker.arch = "amd64"
-
-[nix-aarch64-linux]
-src.github_tag = "nixos/nix"
-fetch.docker = "docker.io/nixos/nix"
-docker.arch = "arm64"
+[incus]
+src.git = "https://github.com/lxc/incus.git"
+src.branch = "main"
+fetch.git = "https://github.com/lxc/incus.git"
 
 [river]
 src.git = "https://codeberg.org/river/river.git"

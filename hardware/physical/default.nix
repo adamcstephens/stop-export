@@ -42,20 +42,17 @@ in
 
         remote_write =
           let
-            remoteWriteTargets =
-              builtins.map
-                (p: {
-                  url = p;
-                  # put hostname in instance instead of localhost:1234
-                  write_relabel_configs = [
-                    {
-                      replacement = config.networking.hostName;
-                      target_label = "instance";
-                      action = "replace";
-                    }
-                  ];
-                })
-                site.promRemoteWriteEndpoints;
+            remoteWriteTargets = builtins.map (p: {
+              url = p;
+              # put hostname in instance instead of localhost:1234
+              write_relabel_configs = [
+                {
+                  replacement = config.networking.hostName;
+                  target_label = "instance";
+                  action = "replace";
+                }
+              ];
+            }) site.promRemoteWriteEndpoints;
           in
           remoteWriteTargets;
       }

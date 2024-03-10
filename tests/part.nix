@@ -29,7 +29,18 @@
             self
             ;
         };
-        litefs = import ./litefs.nix { inherit lib pkgs self; };
+
+        home-manager-managed = import ./home-manager-managed.nix { inherit inputs lib pkgs; };
+        home-manager-unmanaged = import ./home-manager-unmanaged.nix { inherit inputs lib pkgs; };
+
+        litefs = import ./litefs.nix {
+          inherit
+            inputs
+            lib
+            pkgs
+            self
+            ;
+        };
         router = import ./router.nix { inherit lib pkgs routerCommon; };
       };
     };
