@@ -16,7 +16,7 @@ in
     boot.initrd.kernelModules = [ "amdgpu" ];
 
     environment.systemPackages = [
-      pkgs.nvtop-amd
+      pkgs.nvtopPackages.amd
       pkgs.rocmPackages.rocminfo
     ];
 

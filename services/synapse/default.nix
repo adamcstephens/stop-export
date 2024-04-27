@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.stop.services.synapse;
+  site = config.stop.sites.${config.stop.site};
 in
 {
   options.stop.services.synapse = {
@@ -31,24 +32,19 @@ in
       certs.synapse = {
         domain = config.robins.zone;
         extraDomainNames = [
-          config.robins.hostnames.chat
+          site.services.chat
+          site.services.cinny
           config.robins.hostnames.matrix
           config.robins.hostnames.matrix-sliding-sync
         ];
 
         listenHTTP = ":80";
 
-        group = "pomerium";
+        group = "traefik";
 
-        reloadServices = [ "pomerium.service" ];
+        reloadServices = [ "traefik.service" ];
       };
     };
-    services.pomerium.settings.certificates = [
-      {
-        cert = "/var/lib/acme/synapse/fullchain.pem";
-        key = "/var/lib/acme/synapse/key.pem";
-      }
-    ];
 
     services.postgresql = {
       enable = true;
@@ -73,7 +69,7 @@ in
       settings = {
         server_name = config.robins.zone;
         public_baseurl = "https://${config.robins.hostnames.matrix}/";
-        web_client_location = "https://${config.robins.hostnames.chat}/";
+        web_client_location = "https://${site.services.chat}/";
         # serve_server_wellknown = true; # doesn't support matrix.zone
 
         database.name = "psycopg2";
@@ -172,7 +168,7 @@ in
           };
         };
 
-        "${config.robins.hostnames.chat}" = {
+        "${site.services.chat}" = {
           root = pkgs.element-web.override {
             conf = {
               default_server_name = config.robins.zone;
@@ -180,46 +176,59 @@ in
             };
           };
         };
+
+        "${site.services.cinny}" = {
+          root = pkgs.cinny.override {
+            conf = {
+              defaultHomeserver = 0;
+              homeserverList = [ config.robins.zone ];
+            };
+          };
+        };
       };
     };
 
-    stop.services.pomerium.enable = true;
-    services.pomerium.settings = {
-      service = "proxy";
-      routes =
-        [
-          {
-            from = "https://${config.robins.hostnames.matrix}";
-            to = "http://127.0.0.1:8080";
-            prefix = "/.well-known/matrix";
-            allow_public_unauthenticated_access = true;
-          }
-          {
-            from = "https://${config.robins.hostnames.matrix}";
-            to = "http://127.0.0.1:8008";
-            # policy.allow.and = [{accept = true;}];
-            allow_public_unauthenticated_access = true;
-            timeout = "300s";
-          }
-          {
-            from = "https://${config.robins.hostnames.chat}";
-            to = "http://127.0.0.1:8080";
-            policy.allow.and = [ { domain.is = config.robins.zone; } ];
-            # allow_public_unauthenticated_access = true;
-          }
-          {
-            from = "https://${config.robins.zone}";
-            to = "http://127.0.0.1:8080";
-            prefix = "/.well-known/matrix";
-            allow_public_unauthenticated_access = true;
-          }
-        ]
-        ++ (lib.optional config.services.matrix-sliding-sync.enable {
-          from = "https://${config.robins.hostnames.matrix-sliding-sync}";
-          to = "http://127.0.0.1:8009";
-          # regex = "^/(client/|_matrix/client/unstable/org.matrix.msc3575/sync).*";
-          allow_public_unauthenticated_access = true;
-        });
+    stop.services.traefik.enable = true;
+    services.traefik.staticConfigOptions.api = lib.mkForce false;
+    services.traefik.dynamicConfigOptions = {
+      tls.certificates = [
+        {
+          certFile = "/var/lib/acme/synapse/fullchain.pem";
+          keyFile = "/var/lib/acme/synapse/key.pem";
+        }
+      ];
+
+      http.routers = {
+        synapse = {
+          entryPoints = [ "websecure" ];
+          rule = "Host(`${config.robins.hostnames.matrix}`)";
+          service = "synapse";
+          tls = true;
+        };
+        matrix-wellknown = {
+          entryPoints = [ "websecure" ];
+          rule = "(Host(`${config.robins.hostnames.matrix}`) || Host(`${config.robins.zone}`)) && PathPrefix(`/.well-known/matrix`)";
+          service = "nginx";
+          tls = true;
+        };
+        element = {
+          entryPoints = [ "websecure" ];
+          rule = "Host(`${site.services.chat}`)";
+          service = "nginx";
+          tls = true;
+        };
+        cinny = {
+          entryPoints = [ "websecure" ];
+          rule = "Host(`${site.services.cinny}`)";
+          service = "nginx";
+          tls = true;
+        };
+      };
+
+      http.services = {
+        nginx.loadBalancer.servers = [ { url = "http://127.0.0.1:8080"; } ];
+        synapse.loadBalancer.servers = [ { url = "http://127.0.0.1:8008"; } ];
+      };
     };
 
     users.groups.matrix-sliding-sync = lib.mkIf config.services.matrix-sliding-sync.enable { };

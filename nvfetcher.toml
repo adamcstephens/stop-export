@@ -1,8 +1,3 @@
-[incus]
-src.git = "https://github.com/lxc/incus.git"
-src.branch = "main"
-fetch.git = "https://github.com/lxc/incus.git"
-
 [river]
 src.git = "https://codeberg.org/river/river.git"
 src.branch = "master"

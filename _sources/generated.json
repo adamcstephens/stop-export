@@ -1,26 +1,7 @@
 {
-    "incus": {
-        "cargoLocks": null,
-        "date": "2024-03-08",
-        "extract": null,
-        "name": "incus",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "rev": "cff35a29ee3d7a2af1f937cbb6cf23776941854b",
-            "sha256": "sha256-4B2opYTOWQDRxCZtO9EXosvKv5rLIQRxEeMbn5fYOcQ=",
-            "type": "git",
-            "url": "https://github.com/lxc/incus.git"
-        },
-        "version": "cff35a29ee3d7a2af1f937cbb6cf23776941854b"
-    },
     "river": {
         "cargoLocks": null,
-        "date": "2024-03-08",
+        "date": "2024-04-19",
         "extract": null,
         "name": "river",
         "passthru": null,
@@ -30,11 +11,11 @@
             "fetchSubmodules": true,
             "leaveDotGit": false,
             "name": null,
-            "rev": "4a65af667e59a703000d859e77098a4893b77fa6",
-            "sha256": "sha256-Hm8FyG8EX7G8GKnNZE/R12laooQJQdwtDJaWDVo5LGw=",
+            "rev": "9bbd34a0e31b6d429df2d39a59d8990a9585e186",
+            "sha256": "sha256-ZfKh1PJB+S2x7/6SWqgvleQjM50EZKfNKl/pOwVNZCY=",
             "type": "git",
             "url": "https://codeberg.org/river/river.git"
         },
-        "version": "4a65af667e59a703000d859e77098a4893b77fa6"
+        "version": "9bbd34a0e31b6d429df2d39a59d8990a9585e186"
     }
 }

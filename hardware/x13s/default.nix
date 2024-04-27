@@ -39,10 +39,9 @@ in
       };
     };
 
-    specialisation = {
-      mainline.configuration.nixos-x13s.kernel = "mainline";
-      steev.configuration.nixos-x13s.kernel = "steev";
-    };
+    # specialisation = {
+    #   mainline.configuration.nixos-x13s.kernel = "mainline";
+    # };
 
     stop.hardware.laptop.enable = lib.mkDefault true;
   };

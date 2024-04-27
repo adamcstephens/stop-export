@@ -16,8 +16,8 @@ let
       ;
   };
 
-  riverMaster = (pkgs.river.override { wlroots_0_16 = pkgs.wlroots_0_17; }).overrideAttrs (old: rec {
-    version = "0.3.0-dev-${builtins.substring 0 7 src.rev}";
+  riverMaster = (pkgs.river.override { }).overrideAttrs (old: rec {
+    version = "0.3.1-dev-${builtins.substring 0 7 src.rev}";
     src = nvfetcher.river.src;
   });
 

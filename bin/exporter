@@ -51,19 +51,18 @@ export def audit-includes [] {
     let inc_full = $app_config.paths.source | path join $inc
 
     if not ($inc_full | path exists) {
-      print $"!! Include '($inc_full)' does not exist"
-      exit 1
+      $app_config | remover $inc
+    } else {
+      if ($inc_full | path type) != "file" {
+        print $"!! Include '($inc_full)' is not a file, only files are supported"
+        exit 1
+      }
+
+      $app_config.watches.content-regex | each { |c| audit-content $inc_full $c }
+      $app_config.watches.filename-regex | each { |f| audit-filename $inc_full $f }
+
+      $inc_full
     }
-
-    if ($inc_full | path type) != "file" {
-      print $"!! Include '($inc_full)' is not a file, only files are supported"
-      exit 1
-    }
-
-    $app_config.watches.content-regex | each { |c| audit-content $inc_full $c }
-    $app_config.watches.filename-regex | each { |f| audit-filename $inc_full $f }
-
-    $inc_full
   })
 }
 
@@ -122,6 +121,16 @@ def committer [
   cd -
 
   $app_config
+}
+
+def remover [ file: string ] {
+  let app_config = $in
+
+  cd $app_config.paths.destination
+    if ($file | path exists) {
+      git rm -f $file
+    }
+  cd -
 }
 
 def main [
