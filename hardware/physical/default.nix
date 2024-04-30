@@ -17,6 +17,9 @@ in
     environment.systemPackages = [ pkgs.smartmontools ];
 
     services.smartd.enable = true;
+    services.udev.extraRules = ''
+      SUBSYSTEM=="nvme", KERNEL=="nvme[0-9]*", GROUP="disk"
+    '';
 
     services.prometheus.exporters.smartctl = {
       enable = true;
