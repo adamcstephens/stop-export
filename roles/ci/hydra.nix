@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   site,
@@ -39,10 +40,10 @@ in
       ];
     };
 
-    services.hydra = {
+    services.hydra-dev = {
       enable = true;
 
-      # package = pkgs.hydra_unstable.override { nix = pkgs.nixVersions.nix_2_21; };
+      package = inputs.hydra.packages.${pkgs.system}.hydra.override { nix = pkgs.nixVersions.nix_2_19; };
 
       buildMachinesFiles = [ "/etc/nix/machines" ];
       dbi = "dbi:Pg:dbname=hydra;host=127.0.0.1;port=3125;user=hydra;";
