@@ -16,7 +16,7 @@ let
       ;
   };
 
-  riverMaster = (pkgs.river.override { }).overrideAttrs (old: rec {
+  river-dev = (pkgs.river.override { }).overrideAttrs (old: rec {
     version = "0.3.1-dev-${builtins.substring 0 7 src.rev}";
     src = nvfetcher.river.src;
   });
@@ -56,8 +56,8 @@ in
             }
             {
               manage = "desktop";
-              name = "river-master";
-              start = riverLauncher riverMaster;
+              name = "river-dev";
+              start = riverLauncher river-dev;
             }
           ];
     };

@@ -17,6 +17,13 @@ in
   config = lib.mkIf cfg.enable {
     age.secrets.builderKey.owner = "hydra-queue-runner";
 
+    age.secrets.hydra-include-xml = {
+      file = ./hydra-include.xml.age;
+      owner = "hydra";
+      group = "hydra";
+      mode = "440";
+    };
+
     age.secrets.hydra-pgpass = {
       file = ./hydra-pgpass.age;
       owner = "hydra";
@@ -47,6 +54,9 @@ in
 
       buildMachinesFiles = [ "/etc/nix/machines" ];
       dbi = "dbi:Pg:dbname=hydra;host=127.0.0.1;port=3125;user=hydra;";
+      extraConfig = ''
+        Include ${config.age.secrets.hydra-include-xml.path}
+      '';
       extraEnv.PGPASSFILE = config.age.secrets.hydra-pgpass.path;
       hydraURL = "https://${site.services.hydra}";
       listenHost = "127.0.0.1";

@@ -72,6 +72,9 @@ in
         web_client_location = "https://${site.services.chat}/";
         # serve_server_wellknown = true; # doesn't support matrix.zone
 
+        # these were manually copied
+        app_service_config_files = [ "/var/lib/matrix-synapse/telegram-registration.yaml" ];
+
         database.name = "psycopg2";
         enable_metrics = true;
         listeners = [

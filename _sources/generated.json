@@ -1,7 +1,7 @@
 {
     "river": {
         "cargoLocks": null,
-        "date": "2024-04-24",
+        "date": "2024-05-02",
         "extract": null,
         "name": "river",
         "passthru": null,
@@ -11,11 +11,11 @@
             "fetchSubmodules": true,
             "leaveDotGit": false,
             "name": null,
-            "rev": "5262a4c5a61f547acd29560f1af9cf342b9958ae",
-            "sha256": "sha256-MAQ4FRzkGrO2oHWU6VlnHpGQE8855Goq5SdjV46+yek=",
+            "rev": "e29d66f1deeb410c61e892e12e94e9971e645320",
+            "sha256": "sha256-Eywj0OrYOqqsZmuFSnwCoCIQLOX+HUHhPcgM/aTb9Jg=",
             "type": "git",
             "url": "https://codeberg.org/river/river.git"
         },
-        "version": "5262a4c5a61f547acd29560f1af9cf342b9958ae"
+        "version": "e29d66f1deeb410c61e892e12e94e9971e645320"
     }
 }

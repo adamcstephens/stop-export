@@ -3,15 +3,15 @@
 {
   river = {
     pname = "river";
-    version = "5262a4c5a61f547acd29560f1af9cf342b9958ae";
+    version = "e29d66f1deeb410c61e892e12e94e9971e645320";
     src = fetchgit {
       url = "https://codeberg.org/river/river.git";
-      rev = "5262a4c5a61f547acd29560f1af9cf342b9958ae";
+      rev = "e29d66f1deeb410c61e892e12e94e9971e645320";
       fetchSubmodules = true;
       deepClone = false;
       leaveDotGit = false;
-      sha256 = "sha256-MAQ4FRzkGrO2oHWU6VlnHpGQE8855Goq5SdjV46+yek=";
+      sha256 = "sha256-Eywj0OrYOqqsZmuFSnwCoCIQLOX+HUHhPcgM/aTb9Jg=";
     };
-    date = "2024-04-24";
+    date = "2024-05-02";
   };
 }
